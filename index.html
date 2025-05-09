@@ -30,7 +30,6 @@
       <option value="java">Java</option>
       <option value="json">JSON</option>
       <option value="html">HTML</option>
-      <option value="css">CSS</option>
     </select>
     <button id="theme-toggle">Toggle Theme</button>
   </div>
@@ -57,19 +56,94 @@
       // Java standard library types and methods
       const javaStandardLibrary = {
         types: [
+          // Basic Types
           'String', 'Integer', 'Double', 'Boolean', 'Character', 'Byte', 'Short', 'Long', 'Float',
+          // Collections
           'ArrayList', 'LinkedList', 'HashMap', 'HashSet', 'TreeMap', 'TreeSet', 'Queue', 'Stack',
+          'Vector', 'PriorityQueue', 'LinkedHashMap', 'LinkedHashSet', 'ConcurrentHashMap',
+          // I/O
           'File', 'Scanner', 'BufferedReader', 'BufferedWriter', 'FileReader', 'FileWriter',
-          'Thread', 'Runnable', 'Exception', 'IOException', 'RuntimeException'
+          'InputStream', 'OutputStream', 'FileInputStream', 'FileOutputStream',
+          // Threading
+          'Thread', 'Runnable', 'Callable', 'ExecutorService', 'Future', 'CompletableFuture',
+          // Networking
+          'Socket', 'ServerSocket', 'URL', 'HttpURLConnection', 'InetAddress',
+          // Utilities
+          'Arrays', 'Collections', 'Objects', 'Optional', 'Stream', 'StringBuilder', 'StringBuffer',
+          // Exceptions
+          'Exception', 'IOException', 'RuntimeException', 'IllegalArgumentException', 'NullPointerException',
+          // Reflection
+          'Class', 'Method', 'Field', 'Constructor',
+          // Annotations
+          'Override', 'Deprecated', 'SuppressWarnings', 'FunctionalInterface'
         ],
         methods: {
-          'String': ['length()', 'charAt(int)', 'substring(int)', 'substring(int, int)', 'toLowerCase()', 'toUpperCase()', 'trim()', 'split(String)', 'equals(Object)', 'contains(String)', 'startsWith(String)', 'endsWith(String)'],
-          'ArrayList': ['add(E)', 'add(int, E)', 'remove(int)', 'remove(Object)', 'get(int)', 'set(int, E)', 'size()', 'clear()', 'contains(Object)', 'indexOf(Object)', 'isEmpty()'],
-          'HashMap': ['put(K, V)', 'get(K)', 'remove(K)', 'containsKey(K)', 'containsValue(V)', 'size()', 'clear()', 'keySet()', 'values()', 'entrySet()'],
-          'File': ['exists()', 'isFile()', 'isDirectory()', 'getName()', 'getPath()', 'getAbsolutePath()', 'list()', 'mkdir()', 'delete()'],
-          'Scanner': ['next()', 'nextInt()', 'nextDouble()', 'nextLine()', 'hasNext()', 'hasNextInt()', 'close()'],
-          'Thread': ['start()', 'run()', 'sleep(long)', 'join()', 'interrupt()', 'isAlive()', 'setPriority(int)', 'getPriority()']
+          'String': [
+            'length()', 'charAt(int)', 'substring(int)', 'substring(int, int)', 'toLowerCase()', 'toUpperCase()',
+            'trim()', 'split(String)', 'equals(Object)', 'contains(String)', 'startsWith(String)', 'endsWith(String)',
+            'replace(char, char)', 'replace(String, String)', 'replaceAll(String, String)', 'replaceFirst(String, String)',
+            'matches(String)', 'compareTo(String)', 'compareToIgnoreCase(String)', 'concat(String)', 'indexOf(String)',
+            'lastIndexOf(String)', 'isEmpty()', 'isBlank()', 'strip()', 'stripLeading()', 'stripTrailing()',
+            'lines()', 'repeat(int)', 'formatted(Object...)', 'valueOf(Object)'
+          ],
+          'ArrayList': [
+            'add(E)', 'add(int, E)', 'addAll(Collection)', 'addAll(int, Collection)', 'remove(int)', 'remove(Object)',
+            'removeAll(Collection)', 'retainAll(Collection)', 'get(int)', 'set(int, E)', 'size()', 'clear()',
+            'contains(Object)', 'indexOf(Object)', 'lastIndexOf(Object)', 'isEmpty()', 'toArray()', 'toArray(T[])',
+            'subList(int, int)', 'forEach(Consumer)', 'removeIf(Predicate)', 'replaceAll(UnaryOperator)',
+            'sort(Comparator)', 'spliterator()', 'stream()', 'parallelStream()'
+          ],
+          'HashMap': [
+            'put(K, V)', 'putAll(Map)', 'putIfAbsent(K, V)', 'get(K)', 'getOrDefault(K, V)', 'remove(K)',
+            'remove(K, V)', 'replace(K, V)', 'replace(K, V, V)', 'containsKey(K)', 'containsValue(V)',
+            'size()', 'clear()', 'keySet()', 'values()', 'entrySet()', 'forEach(BiConsumer)',
+            'compute(K, BiFunction)', 'computeIfAbsent(K, Function)', 'computeIfPresent(K, BiFunction)',
+            'merge(K, V, BiFunction)', 'replaceAll(BiFunction)'
+          ],
+          'File': [
+            'exists()', 'isFile()', 'isDirectory()', 'getName()', 'getPath()', 'getAbsolutePath()',
+            'getCanonicalPath()', 'list()', 'listFiles()', 'mkdir()', 'mkdirs()', 'delete()',
+            'deleteOnExit()', 'createNewFile()', 'canRead()', 'canWrite()', 'canExecute()',
+            'setReadable(boolean)', 'setWritable(boolean)', 'setExecutable(boolean)',
+            'lastModified()', 'length()', 'getParent()', 'getParentFile()'
+          ],
+          'Thread': [
+            'start()', 'run()', 'sleep(long)', 'join()', 'interrupt()', 'isAlive()',
+            'setPriority(int)', 'getPriority()', 'setName(String)', 'getName()',
+            'setDaemon(boolean)', 'isDaemon()', 'getState()', 'getStackTrace()',
+            'getThreadGroup()', 'getContextClassLoader()', 'setContextClassLoader(ClassLoader)',
+            'getUncaughtExceptionHandler()', 'setUncaughtExceptionHandler(UncaughtExceptionHandler)'
+          ],
+          'Stream': [
+            'filter(Predicate)', 'map(Function)', 'flatMap(Function)', 'distinct()', 'sorted()',
+            'sorted(Comparator)', 'peek(Consumer)', 'limit(long)', 'skip(long)', 'forEach(Consumer)',
+            'forEachOrdered(Consumer)', 'toArray()', 'toArray(IntFunction)', 'reduce(BinaryOperator)',
+            'reduce(T, BinaryOperator)', 'collect(Collector)', 'min(Comparator)', 'max(Comparator)',
+            'count()', 'anyMatch(Predicate)', 'allMatch(Predicate)', 'noneMatch(Predicate)',
+            'findFirst()', 'findAny()'
+          ]
         }
+      };
+
+      // Java import packages
+      const javaImportPackages = {
+        'java.lang': ['String', 'Integer', 'Double', 'Boolean', 'Character', 'Byte', 'Short', 'Long', 'Float', 'System', 'Math', 'Thread', 'Runnable', 'Exception', 'RuntimeException'],
+        'java.util': ['ArrayList', 'LinkedList', 'HashMap', 'HashSet', 'TreeMap', 'TreeSet', 'Queue', 'Stack', 'Vector', 'PriorityQueue', 'LinkedHashMap', 'LinkedHashSet', 'ConcurrentHashMap', 'Arrays', 'Collections', 'Objects', 'Optional', 'Stream'],
+        'java.io': ['File', 'Scanner', 'BufferedReader', 'BufferedWriter', 'FileReader', 'FileWriter', 'InputStream', 'OutputStream', 'FileInputStream', 'FileOutputStream'],
+        'java.net': ['Socket', 'ServerSocket', 'URL', 'HttpURLConnection', 'InetAddress'],
+        'java.time': ['LocalDate', 'LocalTime', 'LocalDateTime', 'ZonedDateTime', 'Duration', 'Period'],
+        'java.nio': ['Files', 'Paths', 'Path', 'ByteBuffer', 'CharBuffer'],
+        'java.util.concurrent': ['ExecutorService', 'Future', 'CompletableFuture', 'Callable', 'ScheduledExecutorService'],
+        'java.util.stream': ['Stream', 'Collectors', 'IntStream', 'LongStream', 'DoubleStream'],
+        'java.util.function': ['Function', 'Predicate', 'Consumer', 'Supplier', 'BiFunction'],
+        'java.util.regex': ['Pattern', 'Matcher'],
+        'java.text': ['SimpleDateFormat', 'DecimalFormat', 'NumberFormat'],
+        'java.math': ['BigInteger', 'BigDecimal'],
+        'java.security': ['MessageDigest', 'SecureRandom', 'KeyPairGenerator'],
+        'javax.crypto': ['Cipher', 'SecretKey', 'KeyGenerator'],
+        'java.sql': ['Connection', 'Statement', 'PreparedStatement', 'ResultSet'],
+        'java.awt': ['Color', 'Font', 'Graphics', 'Image'],
+        'javax.swing': ['JFrame', 'JPanel', 'JButton', 'JLabel', 'JTextField']
       };
 
       // Enhanced Python language features
@@ -78,24 +152,110 @@
       // Python standard library types and methods
       const pythonStandardLibrary = {
         types: [
+          // Basic Types
           'str', 'int', 'float', 'bool', 'list', 'tuple', 'dict', 'set', 'frozenset',
-          'datetime', 'time', 'date', 'timedelta', 'pathlib', 'os', 'sys', 'json',
-          'random', 'math', 'collections', 'itertools', 'functools', 're'
+          'bytes', 'bytearray', 'complex', 'range', 'slice', 'memoryview',
+          // Collections
+          'collections', 'deque', 'defaultdict', 'OrderedDict', 'Counter', 'ChainMap',
+          'namedtuple', 'UserDict', 'UserList', 'UserString',
+          // Date and Time
+          'datetime', 'time', 'date', 'timedelta', 'timezone', 'calendar',
+          // File System
+          'pathlib', 'os', 'sys', 'shutil', 'glob', 'fnmatch', 'tempfile',
+          // Data Processing
+          'json', 'csv', 'pickle', 'sqlite3', 'xml', 'html', 'urllib',
+          // Math and Science
+          'math', 'random', 'statistics', 'decimal', 'fractions', 'numbers',
+          // Iterators and Generators
+          'itertools', 'functools', 'operator', 'contextlib', 'typing',
+          // Regular Expressions
+          're', 'regex',
+          // Networking
+          'socket', 'http', 'urllib', 'email', 'smtplib', 'ftplib',
+          // Concurrency
+          'threading', 'multiprocessing', 'asyncio', 'concurrent.futures',
+          // Testing
+          'unittest', 'pytest', 'doctest', 'mock'
         ],
         methods: {
-          'str': ['upper()', 'lower()', 'strip()', 'split()', 'join()', 'replace()', 'startswith()', 'endswith()', 'find()', 'count()', 'format()'],
-          'list': ['append()', 'extend()', 'insert()', 'remove()', 'pop()', 'index()', 'count()', 'sort()', 'reverse()', 'clear()', 'copy()'],
-          'dict': ['get()', 'setdefault()', 'update()', 'keys()', 'values()', 'items()', 'pop()', 'clear()', 'copy()'],
-          'set': ['add()', 'remove()', 'discard()', 'pop()', 'clear()', 'union()', 'intersection()', 'difference()', 'symmetric_difference()'],
-          'datetime': ['now()', 'today()', 'strftime()', 'strptime()', 'timestamp()', 'fromtimestamp()'],
-          'os': ['path.join()', 'path.exists()', 'path.isfile()', 'path.isdir()', 'listdir()', 'mkdir()', 'remove()', 'rename()'],
-          'json': ['dumps()', 'loads()', 'dump()', 'load()']
+          'str': [
+            'upper()', 'lower()', 'strip()', 'split()', 'join()', 'replace()', 'startswith()', 'endswith()',
+            'find()', 'count()', 'format()', 'encode()', 'decode()', 'isalpha()', 'isdigit()', 'isalnum()',
+            'isspace()', 'islower()', 'isupper()', 'istitle()', 'capitalize()', 'title()', 'swapcase()',
+            'lstrip()', 'rstrip()', 'partition()', 'rpartition()', 'splitlines()', 'zfill()', 'center()',
+            'ljust()', 'rjust()', 'expandtabs()', 'translate()', 'maketrans()'
+          ],
+          'list': [
+            'append()', 'extend()', 'insert()', 'remove()', 'pop()', 'index()', 'count()', 'sort()',
+            'reverse()', 'clear()', 'copy()', 'max()', 'min()', 'sum()', 'any()', 'all()',
+            'filter()', 'map()', 'zip()', 'enumerate()', 'sorted()', 'reversed()'
+          ],
+          'dict': [
+            'get()', 'setdefault()', 'update()', 'keys()', 'values()', 'items()', 'pop()', 'clear()',
+            'copy()', 'fromkeys()', 'popitem()', 'max()', 'min()', 'sorted()', 'any()', 'all()',
+            'filter()', 'map()', 'zip()', 'enumerate()'
+          ],
+          'set': [
+            'add()', 'remove()', 'discard()', 'pop()', 'clear()', 'copy()', 'union()', 'intersection()',
+            'difference()', 'symmetric_difference()', 'update()', 'intersection_update()',
+            'difference_update()', 'symmetric_difference_update()', 'isdisjoint()', 'issubset()',
+            'issuperset()'
+          ],
+          'datetime': [
+            'now()', 'today()', 'strftime()', 'strptime()', 'timestamp()', 'fromtimestamp()',
+            'utcnow()', 'combine()', 'fromordinal()', 'fromisoformat()', 'isoformat()',
+            'ctime()', 'date()', 'time()', 'timetz()', 'timetuple()', 'toordinal()',
+            'weekday()', 'isoweekday()', 'isocalendar()', 'replace()', 'astimezone()'
+          ],
+          'os': [
+            'path.join()', 'path.exists()', 'path.isfile()', 'path.isdir()', 'listdir()', 'mkdir()',
+            'remove()', 'rename()', 'getcwd()', 'chdir()', 'makedirs()', 'removedirs()',
+            'walk()', 'environ', 'getenv()', 'putenv()', 'system()', 'popen()',
+            'path.abspath()', 'path.basename()', 'path.dirname()', 'path.splitext()',
+            'path.expanduser()', 'path.expandvars()', 'path.normpath()', 'path.realpath()'
+          ],
+          'json': [
+            'dumps()', 'loads()', 'dump()', 'load()', 'JSONEncoder', 'JSONDecoder'
+          ]
         }
+      };
+
+      // Python import modules
+      const pythonImportModules = {
+        'builtins': ['str', 'int', 'float', 'bool', 'list', 'tuple', 'dict', 'set', 'frozenset', 'bytes', 'bytearray', 'complex', 'range', 'slice', 'memoryview'],
+        'collections': ['deque', 'defaultdict', 'OrderedDict', 'Counter', 'ChainMap', 'namedtuple', 'UserDict', 'UserList', 'UserString'],
+        'datetime': ['datetime', 'time', 'date', 'timedelta', 'timezone', 'calendar'],
+        'os': ['path', 'makedirs', 'removedirs', 'rename', 'remove', 'mkdir', 'rmdir', 'listdir', 'walk', 'getcwd', 'chdir', 'environ', 'getenv', 'putenv'],
+        'sys': ['stdin', 'stdout', 'stderr', 'argv', 'path', 'modules', 'exit', 'version', 'platform'],
+        'json': ['dumps', 'loads', 'dump', 'load', 'JSONEncoder', 'JSONDecoder'],
+        'math': ['pi', 'e', 'sqrt', 'pow', 'sin', 'cos', 'tan', 'log', 'exp', 'ceil', 'floor', 'factorial'],
+        'random': ['random', 'randint', 'choice', 'shuffle', 'sample', 'uniform', 'gauss'],
+        're': ['compile', 'match', 'search', 'findall', 'finditer', 'sub', 'split', 'escape'],
+        'itertools': ['chain', 'cycle', 'repeat', 'count', 'islice', 'tee', 'zip_longest', 'product', 'permutations', 'combinations'],
+        'functools': ['reduce', 'partial', 'wraps', 'lru_cache', 'total_ordering'],
+        'pathlib': ['Path', 'PurePath', 'PosixPath', 'WindowsPath'],
+        'shutil': ['copy', 'copy2', 'copytree', 'move', 'rmtree'],
+        'tempfile': ['TemporaryFile', 'NamedTemporaryFile', 'TemporaryDirectory', 'gettempdir'],
+        'csv': ['reader', 'writer', 'DictReader', 'DictWriter'],
+        'sqlite3': ['connect', 'Connection', 'Cursor', 'Row'],
+        'threading': ['Thread', 'Lock', 'RLock', 'Condition', 'Event', 'Semaphore', 'Barrier'],
+        'multiprocessing': ['Process', 'Pool', 'Queue', 'Pipe', 'Manager', 'Value', 'Array'],
+        'asyncio': ['run', 'create_task', 'gather', 'sleep', 'wait', 'Queue', 'Event', 'Lock'],
+        'socket': ['socket', 'gethostname', 'gethostbyname', 'getservbyname'],
+        'http': ['client', 'server', 'cookies', 'cookiejar'],
+        'urllib': ['request', 'parse', 'error', 'robotparser'],
+        'email': ['message', 'parser', 'generator', 'mime', 'policy'],
+        'smtplib': ['SMTP', 'SMTP_SSL', 'LMTP'],
+        'ftplib': ['FTP', 'FTP_TLS'],
+        'unittest': ['TestCase', 'TestSuite', 'TestLoader', 'TextTestRunner', 'mock'],
+        'pytest': ['fixture', 'mark', 'parametrize', 'raises', 'approx'],
+        'doctest': ['testmod', 'testfile', 'DocTestSuite', 'DocFileSuite'],
+        'typing': ['Any', 'Union', 'Optional', 'List', 'Dict', 'Set', 'Tuple', 'Callable', 'TypeVar', 'Generic']
       };
 
       // Enhanced Java completion provider
       monaco.languages.registerCompletionItemProvider('java', {
-        triggerCharacters: ['.', '@', ' '],
+        triggerCharacters: ['.', '@', ' ', '(', '[', '{'],
         provideCompletionItems: function(model, position) {
           const textUntilPosition = model.getValueInRange({
             startLineNumber: position.lineNumber,
@@ -106,6 +266,44 @@
 
           const suggestions = [];
           
+          // Import suggestions
+          if (textUntilPosition.trim().startsWith('import ')) {
+            const importText = textUntilPosition.trim().substring(7); // Remove 'import '
+            const parts = importText.split('.');
+            
+            if (parts.length === 1) {
+              // First level package
+              Object.keys(javaImportPackages).forEach(pkg => {
+                if (pkg.startsWith(parts[0])) {
+                  suggestions.push({
+                    label: pkg,
+                    kind: monaco.languages.CompletionItemKind.Module,
+                    insertText: pkg,
+                    documentation: `Java package: ${pkg}`
+                  });
+                }
+              });
+            } else {
+              // Sub-package or class
+              const pkg = parts.slice(0, -1).join('.');
+              const className = parts[parts.length - 1];
+              const classes = javaImportPackages[pkg];
+              
+              if (classes) {
+                classes.forEach(cls => {
+                  if (cls.toLowerCase().startsWith(className.toLowerCase())) {
+                    suggestions.push({
+                      label: cls,
+                      kind: monaco.languages.CompletionItemKind.Class,
+                      insertText: cls,
+                      documentation: `Class in ${pkg}: ${cls}`
+                    });
+                  }
+                });
+              }
+            }
+          }
+
           // Add standard library types
           javaStandardLibrary.types.forEach(type => {
             suggestions.push({
@@ -162,6 +360,48 @@
               insertText: 'try {\n\t${1}\n} catch (${2:Exception} e) {\n\t${3}\n}',
               insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
               documentation: 'Create a try-catch block'
+            },
+            {
+              label: 'while loop',
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              insertText: 'while (${1:condition}) {\n\t${2}\n}',
+              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+              documentation: 'Create a while loop'
+            },
+            {
+              label: 'if statement',
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              insertText: 'if (${1:condition}) {\n\t${2}\n}',
+              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+              documentation: 'Create an if statement'
+            },
+            {
+              label: 'if-else statement',
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              insertText: 'if (${1:condition}) {\n\t${2}\n} else {\n\t${3}\n}',
+              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+              documentation: 'Create an if-else statement'
+            },
+            {
+              label: 'switch statement',
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              insertText: 'switch (${1:expression}) {\n\tcase ${2:value}:\n\t\t${3}\n\t\tbreak;\n\tdefault:\n\t\t${4}\n}',
+              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+              documentation: 'Create a switch statement'
+            },
+            {
+              label: 'interface',
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              insertText: 'interface ${1:InterfaceName} {\n\t${2}\n}',
+              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+              documentation: 'Create a new interface'
+            },
+            {
+              label: 'enum',
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              insertText: 'enum ${1:EnumName} {\n\t${2}\n}',
+              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+              documentation: 'Create a new enum'
             }
           );
 
@@ -171,7 +411,7 @@
 
       // Enhanced Python completion provider
       monaco.languages.registerCompletionItemProvider('python', {
-        triggerCharacters: ['.', '@', ' '],
+        triggerCharacters: ['.', '@', ' ', '(', '[', '{'],
         provideCompletionItems: function(model, position) {
           const textUntilPosition = model.getValueInRange({
             startLineNumber: position.lineNumber,
@@ -182,6 +422,45 @@
 
           const suggestions = [];
           
+          // Import suggestions
+          if (textUntilPosition.trim().startsWith('import ') || textUntilPosition.trim().startsWith('from ')) {
+            const isFrom = textUntilPosition.trim().startsWith('from ');
+            const importText = textUntilPosition.trim().substring(isFrom ? 5 : 7); // Remove 'import ' or 'from '
+            const parts = importText.split('.');
+            
+            if (parts.length === 1) {
+              // First level module
+              Object.keys(pythonImportModules).forEach(module => {
+                if (module.startsWith(parts[0])) {
+                  suggestions.push({
+                    label: module,
+                    kind: monaco.languages.CompletionItemKind.Module,
+                    insertText: module,
+                    documentation: `Python module: ${module}`
+                  });
+                }
+              });
+            } else if (isFrom) {
+              // From module import
+              const module = parts[0];
+              const importName = parts[parts.length - 1];
+              const items = pythonImportModules[module];
+              
+              if (items) {
+                items.forEach(item => {
+                  if (item.toLowerCase().startsWith(importName.toLowerCase())) {
+                    suggestions.push({
+                      label: item,
+                      kind: monaco.languages.CompletionItemKind.Variable,
+                      insertText: item,
+                      documentation: `Import from ${module}: ${item}`
+                    });
+                  }
+                });
+              }
+            }
+          }
+
           // Add standard library types
           pythonStandardLibrary.types.forEach(type => {
             suggestions.push({
@@ -233,6 +512,13 @@
               documentation: 'Create a for loop'
             },
             {
+              label: 'while loop',
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              insertText: 'while ${1:condition}:\n\t${2}',
+              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+              documentation: 'Create a while loop'
+            },
+            {
               label: 'try-except',
               kind: monaco.languages.CompletionItemKind.Snippet,
               insertText: 'try:\n\t${1}\nexcept ${2:Exception} as e:\n\t${3}',
@@ -240,11 +526,60 @@
               documentation: 'Create a try-except block'
             },
             {
+              label: 'if statement',
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              insertText: 'if ${1:condition}:\n\t${2}',
+              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+              documentation: 'Create an if statement'
+            },
+            {
+              label: 'if-else statement',
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              insertText: 'if ${1:condition}:\n\t${2}\nelse:\n\t${3}',
+              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+              documentation: 'Create an if-else statement'
+            },
+            {
+              label: 'if-elif-else statement',
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              insertText: 'if ${1:condition}:\n\t${2}\nelif ${3:condition}:\n\t${4}\nelse:\n\t${5}',
+              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+              documentation: 'Create an if-elif-else statement'
+            },
+            {
+              label: 'with statement',
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              insertText: 'with ${1:expression} as ${2:target}:\n\t${3}',
+              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+              documentation: 'Create a with statement'
+            },
+            {
               label: 'if __name__ == "__main__"',
               kind: monaco.languages.CompletionItemKind.Snippet,
               insertText: 'if __name__ == "__main__":\n\t${1}',
               insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
               documentation: 'Create main block'
+            },
+            {
+              label: 'property',
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              insertText: '@property\ndef ${1:name}(self):\n\treturn self._${1:name}\n\n@${1:name}.setter\ndef ${1:name}(self, value):\n\tself._${1:name} = value',
+              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+              documentation: 'Create a property with getter and setter'
+            },
+            {
+              label: 'classmethod',
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              insertText: '@classmethod\ndef ${1:name}(cls):\n\t${2}',
+              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+              documentation: 'Create a class method'
+            },
+            {
+              label: 'staticmethod',
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              insertText: '@staticmethod\ndef ${1:name}():\n\t${2}',
+              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+              documentation: 'Create a static method'
             }
           );
 
