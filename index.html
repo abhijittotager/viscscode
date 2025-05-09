@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>VS Code-like Web Editor</title>
+  <style>
+    body { margin: 0; padding: 0; height: 100vh; display: flex; flex-direction: column; }
+    #toolbar {
+      background: #222;
+      color: #fff;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    #toolbar label, #toolbar select, #toolbar button {
+      font-size: 1rem;
+    }
+    #container { flex: 1; }
+  </style>
+  <!-- Monaco Editor CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs/loader.js"></script>
+</head>
+<body>
+  <div id="toolbar">
+    <label for="language">Language:</label>
+    <select id="language">
+      <option value="javascript">JavaScript</option>
+      <option value="python">Python</option>
+      <option value="java">Java</option>
+      <option value="json">JSON</option>
+      <option value="html">HTML</option>
+      <option value="css">CSS</option>
+    </select>
+    <button id="theme-toggle">Toggle Theme</button>
+  </div>
+  <div id="container" style="width:100vw; height:calc(100vh - 48px);"></div>
+  <script>
+    let currentTheme = 'vs-dark';
+    require.config({ 
+      paths: { 
+        'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.44.0/min/vs',
+        'monaco-languageclient': 'https://cdn.jsdelivr.net/npm/monaco-languageclient@4.0.0/lib'
+      }
+    });
+
+    require(['vs/editor/editor.main'], function () {
+      // Configure language features
+      monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
+        noSemanticValidation: false,
+        noSyntaxValidation: false,
+      });
+
+      // Enhanced Java language features
+      monaco.languages.register({ id: 'java' });
+      
+      // Java standard library types and methods
+      const javaStandardLibrary = {
+        types: [
+          'String', 'Integer', 'Double', 'Boolean', 'Character', 'Byte', 'Short', 'Long', 'Float',
+          'ArrayList', 'LinkedList', 'HashMap', 'HashSet', 'TreeMap', 'TreeSet', 'Queue', 'Stack',
+          'File', 'Scanner', 'BufferedReader', 'BufferedWriter', 'FileReader', 'FileWriter',
+          'Thread', 'Runnable', 'Exception', 'IOException', 'RuntimeException'
+        ],
+        methods: {
+          'String': ['length()', 'charAt(int)', 'substring(int)', 'substring(int, int)', 'toLowerCase()', 'toUpperCase()', 'trim()', 'split(String)', 'equals(Object)', 'contains(String)', 'startsWith(String)', 'endsWith(String)'],
+          'ArrayList': ['add(E)', 'add(int, E)', 'remove(int)', 'remove(Object)', 'get(int)', 'set(int, E)', 'size()', 'clear()', 'contains(Object)', 'indexOf(Object)', 'isEmpty()'],
+          'HashMap': ['put(K, V)', 'get(K)', 'remove(K)', 'containsKey(K)', 'containsValue(V)', 'size()', 'clear()', 'keySet()', 'values()', 'entrySet()'],
+          'File': ['exists()', 'isFile()', 'isDirectory()', 'getName()', 'getPath()', 'getAbsolutePath()', 'list()', 'mkdir()', 'delete()'],
+          'Scanner': ['next()', 'nextInt()', 'nextDouble()', 'nextLine()', 'hasNext()', 'hasNextInt()', 'close()'],
+          'Thread': ['start()', 'run()', 'sleep(long)', 'join()', 'interrupt()', 'isAlive()', 'setPriority(int)', 'getPriority()']
+        }
+      };
+
+      // Enhanced Python language features
+      monaco.languages.register({ id: 'python' });
+      
+      // Python standard library types and methods
+      const pythonStandardLibrary = {
+        types: [
+          'str', 'int', 'float', 'bool', 'list', 'tuple', 'dict', 'set', 'frozenset',
+          'datetime', 'time', 'date', 'timedelta', 'pathlib', 'os', 'sys', 'json',
+          'random', 'math', 'collections', 'itertools', 'functools', 're'
+        ],
+        methods: {
+          'str': ['upper()', 'lower()', 'strip()', 'split()', 'join()', 'replace()', 'startswith()', 'endswith()', 'find()', 'count()', 'format()'],
+          'list': ['append()', 'extend()', 'insert()', 'remove()', 'pop()', 'index()', 'count()', 'sort()', 'reverse()', 'clear()', 'copy()'],
+          'dict': ['get()', 'setdefault()', 'update()', 'keys()', 'values()', 'items()', 'pop()', 'clear()', 'copy()'],
+          'set': ['add()', 'remove()', 'discard()', 'pop()', 'clear()', 'union()', 'intersection()', 'difference()', 'symmetric_difference()'],
+          'datetime': ['now()', 'today()', 'strftime()', 'strptime()', 'timestamp()', 'fromtimestamp()'],
+          'os': ['path.join()', 'path.exists()', 'path.isfile()', 'path.isdir()', 'listdir()', 'mkdir()', 'remove()', 'rename()'],
+          'json': ['dumps()', 'loads()', 'dump()', 'load()']
+        }
+      };
+
+      // Enhanced Java completion provider
+      monaco.languages.registerCompletionItemProvider('java', {
+        triggerCharacters: ['.', '@', ' '],
+        provideCompletionItems: function(model, position) {
+          const textUntilPosition = model.getValueInRange({
+            startLineNumber: position.lineNumber,
+            startColumn: 1,
+            endLineNumber: position.lineNumber,
+            endColumn: position.column
+          });
+
+          const suggestions = [];
+          
+          // Add standard library types
+          javaStandardLibrary.types.forEach(type => {
+            suggestions.push({
+              label: type,
+              kind: monaco.languages.CompletionItemKind.Class,
+              insertText: type,
+              documentation: `Java ${type} class`
+            });
+          });
+
+          // Add methods based on context
+          const lastDotIndex = textUntilPosition.lastIndexOf('.');
+          if (lastDotIndex !== -1) {
+            const typeName = textUntilPosition.substring(0, lastDotIndex).trim();
+            const methods = javaStandardLibrary.methods[typeName];
+            if (methods) {
+              methods.forEach(method => {
+                suggestions.push({
+                  label: method,
+                  kind: monaco.languages.CompletionItemKind.Method,
+                  insertText: method,
+                  documentation: `${typeName} method: ${method}`
+                });
+              });
+            }
+          }
+
+          // Add code snippets
+          suggestions.push(
+            {
+              label: 'public class',
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              insertText: 'public class ${1:ClassName} {\n\t${2}\n}',
+              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+              documentation: 'Create a new Java class'
+            },
+            {
+              label: 'public static void main',
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              insertText: 'public static void main(String[] args) {\n\t${1}\n}',
+              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+              documentation: 'Create main method'
+            },
+            {
+              label: 'for loop',
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              insertText: 'for (int ${1:i} = 0; ${1:i} < ${2:array}.length; ${1:i}++) {\n\t${3}\n}',
+              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+              documentation: 'Create a for loop'
+            },
+            {
+              label: 'try-catch',
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              insertText: 'try {\n\t${1}\n} catch (${2:Exception} e) {\n\t${3}\n}',
+              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+              documentation: 'Create a try-catch block'
+            }
+          );
+
+          return { suggestions };
+        }
+      });
+
+      // Enhanced Python completion provider
+      monaco.languages.registerCompletionItemProvider('python', {
+        triggerCharacters: ['.', '@', ' '],
+        provideCompletionItems: function(model, position) {
+          const textUntilPosition = model.getValueInRange({
+            startLineNumber: position.lineNumber,
+            startColumn: 1,
+            endLineNumber: position.lineNumber,
+            endColumn: position.column
+          });
+
+          const suggestions = [];
+          
+          // Add standard library types
+          pythonStandardLibrary.types.forEach(type => {
+            suggestions.push({
+              label: type,
+              kind: monaco.languages.CompletionItemKind.Class,
+              insertText: type,
+              documentation: `Python ${type} type`
+            });
+          });
+
+          // Add methods based on context
+          const lastDotIndex = textUntilPosition.lastIndexOf('.');
+          if (lastDotIndex !== -1) {
+            const typeName = textUntilPosition.substring(0, lastDotIndex).trim();
+            const methods = pythonStandardLibrary.methods[typeName];
+            if (methods) {
+              methods.forEach(method => {
+                suggestions.push({
+                  label: method,
+                  kind: monaco.languages.CompletionItemKind.Method,
+                  insertText: method,
+                  documentation: `${typeName} method: ${method}`
+                });
+              });
+            }
+          }
+
+          // Add code snippets
+          suggestions.push(
+            {
+              label: 'def',
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              insertText: 'def ${1:function_name}(${2:parameters}):\n\t${3}',
+              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+              documentation: 'Create a new function'
+            },
+            {
+              label: 'class',
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              insertText: 'class ${1:ClassName}:\n\tdef __init__(self):\n\t\t${2}',
+              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+              documentation: 'Create a new class'
+            },
+            {
+              label: 'for loop',
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              insertText: 'for ${1:item} in ${2:items}:\n\t${3}',
+              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+              documentation: 'Create a for loop'
+            },
+            {
+              label: 'try-except',
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              insertText: 'try:\n\t${1}\nexcept ${2:Exception} as e:\n\t${3}',
+              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+              documentation: 'Create a try-except block'
+            },
+            {
+              label: 'if __name__ == "__main__"',
+              kind: monaco.languages.CompletionItemKind.Snippet,
+              insertText: 'if __name__ == "__main__":\n\t${1}',
+              insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+              documentation: 'Create main block'
+            }
+          );
+
+          return { suggestions };
+        }
+      });
+
+      window.editor = monaco.editor.create(document.getElementById('container'), {
+        value: [
+          '// Start coding!',
+          ''
+        ].join('\n'),
+        language: 'javascript',
+        theme: currentTheme,
+        automaticLayout: true,
+        fontSize: 16,
+        minimap: { enabled: true },
+        lineNumbers: 'on',
+        folding: true,
+        wordWrap: 'on',
+        formatOnType: true,
+        formatOnPaste: true,
+        autoIndent: 'full',
+        suggestOnTriggerCharacters: true,
+        quickSuggestions: true,
+        parameterHints: { enabled: true },
+        wordBasedSuggestions: true,
+        suggest: {
+          preview: true,
+          showMethods: true,
+          showFunctions: true,
+          showConstructors: true,
+          showFields: true,
+          showVariables: true,
+          showClasses: true,
+          showStructs: true,
+          showInterfaces: true,
+          showModules: true,
+          showProperties: true,
+          showEvents: true,
+          showOperators: true,
+          showUnits: true,
+          showValues: true,
+          showConstants: true,
+          showEnums: true,
+          showEnumMembers: true,
+          showKeywords: true,
+          showWords: true,
+          showColors: true,
+          showFiles: true,
+          showReferences: true,
+          showFolders: true,
+          showTypeParameters: true,
+          showSnippets: true
+        }
+      });
+
+      // Language switching
+      document.getElementById('language').addEventListener('change', function(e) {
+        monaco.editor.setModelLanguage(editor.getModel(), e.target.value);
+      });
+
+      // Theme toggle
+      document.getElementById('theme-toggle').addEventListener('click', function() {
+        currentTheme = (currentTheme === 'vs-dark') ? 'vs-light' : 'vs-dark';
+        monaco.editor.setTheme(currentTheme);
+      });
+    });
+  </script>
+</body>
+</html>
